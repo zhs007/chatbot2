@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log/slog"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -34,6 +35,9 @@ func (serv *Serv) OnMsg(c *gin.Context) {
 	server.SetMessageHandler(func(msg *message.MixMessage) *message.Reply {
 		//TODO
 		//回复消息：演示回复用户发送的消息
+		goutils.Info("got msg",
+			slog.String("text", msg.Content))
+
 		text := message.NewText("I got it.")
 		return &message.Reply{MsgType: message.MsgTypeText, MsgData: text}
 
@@ -75,15 +79,16 @@ func (serv *Serv) OnMsg(c *gin.Context) {
 	}
 }
 
-func newServ(appid string, appSecret string, token string) *Serv {
+func newServ(appid string, appSecret string, token string, aes string) *Serv {
 	wc := wechat.NewWechat()
 	memory := cache.NewMemory()
 
 	cfg := &offConfig.Config{
-		AppID:     appid,
-		AppSecret: appSecret,
-		Token:     token,
-		Cache:     memory,
+		AppID:          appid,
+		AppSecret:      appSecret,
+		Token:          token,
+		EncodingAESKey: aes,
+		Cache:          memory,
 	}
 	oa := wc.GetOfficialAccount(cfg)
 
@@ -101,8 +106,9 @@ func main() {
 	appSecret := os.Getenv("APPSECRET")
 	token := os.Getenv("TOKEN")
 	listen := os.Getenv("LISTEN")
+	aes := os.Getenv("AES")
 
-	serv := newServ(appid, appSecret, token)
+	serv := newServ(appid, appSecret, token, aes)
 
 	serv.start(listen)
 }
