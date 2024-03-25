@@ -1,0 +1,26 @@
+# zerro "zerrozhao@gmail.com"
+FROM golang:1.21.8 as builder
+
+ENV GOPROXY https://goproxy.io
+
+WORKDIR /src/wx
+
+COPY ./go.* /src/wx/
+
+RUN go mod download
+
+COPY . /src/wx
+
+RUN mkdir ./bin \
+    && CGO_ENABLED=0 GOOS=linux go build -a -o ./bin/wx ./app/wx/*.go \
+    && mkdir /app \
+    && mkdir /app/wx \
+    && mkdir /app/wx/upload \
+    && cp -r ./bin /app/wx/ \
+    && cp ./VERSION /app/wx/
+
+FROM alpine
+RUN apk upgrade && apk add --no-cache tzdata ca-certificates
+WORKDIR /app/wx/bin
+COPY --from=builder /app/wx /app/wx
+CMD ["./wx"]
