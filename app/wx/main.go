@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"os"
 
@@ -52,8 +51,9 @@ func (serv *Serv) OnMsg(c *gin.Context) {
 		}
 
 		content := qwen.TextContent{
-			Text:  fmt.Sprintf(`[{"text": "%v"},{"file": "https://chatbot2.oss-cn-beijing.aliyuncs.com/slotcraft.pdf"}]`, msg.Content),
-			IsRaw: true,
+			Text: msg.Content,
+			// Text:  fmt.Sprintf(`[{"text": "%v"},{"file": "https://chatbot2.oss-cn-beijing.aliyuncs.com/slotcraft.pdf"}]`, msg.Content),
+			IsRaw: false,
 		}
 
 		input.Messages = append(input.Messages, dashscopego.TextMessage{
@@ -69,10 +69,15 @@ func (serv *Serv) OnMsg(c *gin.Context) {
 		ctx := context.TODO()
 		resp, err := serv.qwenClient.CreateCompletion(ctx, req)
 		if err != nil {
-			fmt.Print(err)
+			goutils.Error("Serv.OnMsg:CreateCompletion",
+				goutils.Err(err))
+			// fmt.Print(err)
 
 			return nil
 		}
+
+		goutils.Info("Serv.OnMsg:CreateCompletion",
+			slog.String("content", resp.Output.Choices[0].Message.Content.ToString()))
 
 		text := message.NewText(resp.Output.Choices[0].Message.Content.ToString())
 
