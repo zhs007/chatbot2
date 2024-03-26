@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log/slog"
 	"os"
 
@@ -10,13 +12,16 @@ import (
 	"github.com/silenceper/wechat/v2/officialaccount"
 	offConfig "github.com/silenceper/wechat/v2/officialaccount/config"
 	"github.com/silenceper/wechat/v2/officialaccount/message"
+	"github.com/zhs007/dashscopego"
+	"github.com/zhs007/dashscopego/qwen"
 	"github.com/zhs007/goutils"
 )
 
 type Serv struct {
-	cfg *offConfig.Config
-	wc  *wechat.Wechat
-	oa  *officialaccount.OfficialAccount
+	cfg        *offConfig.Config
+	wc         *wechat.Wechat
+	oa         *officialaccount.OfficialAccount
+	qwenClient *dashscopego.TongyiClient
 }
 
 func (serv *Serv) start(listen string) error {
@@ -38,7 +43,38 @@ func (serv *Serv) OnMsg(c *gin.Context) {
 		goutils.Info("got msg",
 			slog.String("text", msg.Content))
 
-		text := message.NewText("I got it.")
+		input := dashscopego.TextInput{
+			Messages: []dashscopego.TextMessage{
+				{Role: "system", Content: &qwen.TextContent{
+					Text: `你是SlotCraft的智能助手，叫SlotCraft AI，请用英文回答问题`,
+				}},
+			},
+		}
+
+		content := qwen.TextContent{
+			Text:  fmt.Sprintf(`[{"text": "%v"},{"file": "https://chatbot2.oss-cn-beijing.aliyuncs.com/slotcraft.pdf"}]`, msg.Content),
+			IsRaw: true,
+		}
+
+		input.Messages = append(input.Messages, dashscopego.TextMessage{
+			Role:    "user",
+			Content: &content,
+		})
+
+		req := &dashscopego.TextRequest{
+			Input: input,
+		}
+
+		ctx := context.TODO()
+		resp, err := serv.qwenClient.CreateCompletion(ctx, req)
+		if err != nil {
+			fmt.Print(err)
+
+			return nil
+		}
+
+		text := message.NewText(resp.Output.Choices[0].Message.Content.ToString())
+
 		return &message.Reply{MsgType: message.MsgTypeText, MsgData: text}
 
 		//article1 := message.NewArticle("测试图文1", "图文描述", "", "")
@@ -79,7 +115,7 @@ func (serv *Serv) OnMsg(c *gin.Context) {
 	}
 }
 
-func newServ(appid string, appSecret string, token string, aes string) *Serv {
+func newServ(appid string, appSecret string, token string, aes string, apiKey string) *Serv {
 	wc := wechat.NewWechat()
 	memory := cache.NewMemory()
 
@@ -92,10 +128,14 @@ func newServ(appid string, appSecret string, token string, aes string) *Serv {
 	}
 	oa := wc.GetOfficialAccount(cfg)
 
+	model := qwen.QwenTurbo
+	cli := dashscopego.NewTongyiClient(model, apiKey)
+
 	return &Serv{
-		wc:  wc,
-		oa:  oa,
-		cfg: cfg,
+		wc:         wc,
+		oa:         oa,
+		cfg:        cfg,
+		qwenClient: cli,
 	}
 }
 
@@ -107,8 +147,9 @@ func main() {
 	token := os.Getenv("TOKEN")
 	listen := os.Getenv("LISTEN")
 	aes := os.Getenv("AES")
+	apiKey := os.Getenv("DASHSCOPE_API_KEY")
 
-	serv := newServ(appid, appSecret, token, aes)
+	serv := newServ(appid, appSecret, token, aes, apiKey)
 
 	serv.start(listen)
 }

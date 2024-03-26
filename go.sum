@@ -21,8 +21,6 @@ github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ3
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/devinyf/dashscopego v0.0.3 h1:65UBW53av147G7zWh4Hgy+oKyHFLdUkQ+x0vX59EkjA=
-github.com/devinyf/dashscopego v0.0.3/go.mod h1:tgALBuqxj0YzS2PP+9O7KNYdnYIQz3zA67OrVzlYSxw=
 github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f h1:lO4WD4F/rVNCu3HqELle0jiPLLBs70cWOduZpkS1E78=
 github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f/go.mod h1:cuUVRXasLTGF7a8hSLbxyZXjz+1KgoB3wDUb6vlszIc=
 github.com/fatih/structs v1.1.0 h1:Q7juDM0QtcnhCpeyLGQKyg4TOIghuNXrkL32pHAUMxo=
@@ -160,6 +158,8 @@ github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 github.com/yuin/gopher-lua v0.0.0-20220504180219-658193537a64 h1:5mLPGnFdSsevFRFc9q3yYbBkB6tsm4aCwwQV/j1JQAQ=
 github.com/yuin/gopher-lua v0.0.0-20220504180219-658193537a64/go.mod h1:GBR0iDaNXjAgGg9zfCvksxSRnQx76gclCIb7kdAd1Pw=
+github.com/zhs007/dashscopego v0.0.6 h1:uoZz7bnpNo9xmf81cAZ3n1xgXZiVwaketdXgxjSqZ/A=
+github.com/zhs007/dashscopego v0.0.6/go.mod h1:B1EiGzocOyLhaluNqGKLxTc+Vv2ht5JWrSNH0/gYddc=
 github.com/zhs007/goutils v0.2.2 h1:jxLCx9SWC3zOhijqxc0dpUM8+BZswVg9wyLV2oRxRgE=
 github.com/zhs007/goutils v0.2.2/go.mod h1:B/TSiIbceQ5oeLxOmP/sRYpaYYJND8HzbubJLLrDwwU=
 go.uber.org/mock v0.4.0 h1:VcM4ZOtdbR4f6VXfiOpwpVJDL6lCReaZ6mw31wqh7KU=
