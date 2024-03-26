@@ -62,7 +62,8 @@ func (serv *Serv) OnMsg(c *gin.Context) {
 		})
 
 		req := &dashscopego.TextRequest{
-			Input: input,
+			Input:  input,
+			Plugin: `{"pdf_extracter":{}}`,
 		}
 
 		ctx := context.TODO()
