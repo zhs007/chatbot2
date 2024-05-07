@@ -6,6 +6,7 @@ toolchain go1.21.8
 
 require (
 	github.com/gin-gonic/gin v1.9.1
+	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/silenceper/wechat/v2 v2.1.6
 	github.com/zhs007/dashscopego v0.0.6
 	github.com/zhs007/goutils v0.2.2
