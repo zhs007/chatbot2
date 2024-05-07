@@ -1,0 +1,26 @@
+# zerro "zerrozhao@gmail.com"
+FROM golang:1.21.8 as builder
+
+ENV GOPROXY https://goproxy.io
+
+WORKDIR /src/telegrambot
+
+COPY ./go.* /src/telegrambot/
+
+RUN go mod download
+
+COPY . /src/telegrambot
+
+RUN mkdir ./bin \
+    && CGO_ENABLED=0 GOOS=linux go build -a -o ./bin/telegrambot ./app/telegrambot/*.go \
+    && mkdir /app \
+    && mkdir /app/telegrambot \
+    && mkdir /app/telegrambot/upload \
+    && cp -r ./bin /app/telegrambot/ \
+    && cp ./VERSION /app/telegrambot/
+
+FROM alpine
+RUN apk upgrade && apk add --no-cache tzdata ca-certificates
+WORKDIR /app/telegrambot/bin
+COPY --from=builder /app/telegrambot /app/telegrambot
+CMD ["./telegrambot"]
