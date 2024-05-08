@@ -8,7 +8,16 @@ import (
 )
 
 type CharacterMgr struct {
-	Characters []*Character `yaml:"characters" json:"characters"` // characters
+	MapCharacters map[string]*Character `yaml:"characters" json:"characters"` // characters
+}
+
+func (mgr *CharacterMgr) Get(character string) *Character {
+	c, isok := mgr.MapCharacters[character]
+	if isok {
+		return c
+	}
+
+	return nil
 }
 
 func LoadCharacterMgr(fn string) (*CharacterMgr, error) {
@@ -28,6 +37,10 @@ func LoadCharacterMgr(fn string) (*CharacterMgr, error) {
 			goutils.Err(err))
 
 		return nil, err
+	}
+
+	for k, v := range mgr.MapCharacters {
+		v.Name = k
 	}
 
 	return mgr, nil

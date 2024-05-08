@@ -15,12 +15,13 @@ RUN mkdir ./bin \
     && CGO_ENABLED=0 GOOS=linux go build -a -o ./bin/telegrambot ./app/telegrambot/*.go \
     && mkdir /app \
     && mkdir /app/telegrambot \
-    && mkdir /app/telegrambot/upload \
-    && cp -r ./bin /app/telegrambot/ \
-    && cp ./VERSION /app/telegrambot/
+    && mkdir /app/telegrambot/cfg \
+    && cp -r ./bin/telegrambot /app/telegrambot/ \
+    && cp -r ./VERSION /app/telegrambot/ \
+    && cp -r ./data/* /app/telegrambot/cfg/
 
 FROM alpine
 RUN apk upgrade && apk add --no-cache tzdata ca-certificates
-WORKDIR /app/telegrambot/bin
+WORKDIR /app/telegrambot
 COPY --from=builder /app/telegrambot /app/telegrambot
 CMD ["./telegrambot"]
