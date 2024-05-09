@@ -20,10 +20,16 @@ type Character struct {
 
 func (character *Character) NewRequest() IRequest {
 	if len(character.Files) == 0 {
-		return &TextRequest{}
+		req := &TextRequest{}
+		req.SetCharacter(character)
+
+		return req
 	}
 
-	return &FileRequest{}
+	req := &FileRequest{}
+	req.SetCharacter(character)
+
+	return req
 }
 
 // func (character *Character) genRequest(input *dashscopego.TextInput) *dashscopego.TextRequest {
