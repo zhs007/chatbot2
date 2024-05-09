@@ -28,12 +28,20 @@ func (req *FileRequest) Start(chatbot *Chatbot, msg string) (*Message, error) {
 		})
 	}
 
-	fcl := &qwen.FileContentList{}
-
-	fcl.SetText(req.Character.genChat(msg))
-	for _, v := range req.Character.Files {
-		fcl.SetFile(req.Character.genFile(v))
+	fcl := &qwen.FileContentList{
+		{
+			Text: req.Character.genChat(msg),
+		},
+		{
+			// File: "https://qianwen-res.oss-cn-beijing.aliyuncs.com/QWEN_TECHNICAL_REPORT.pdf",
+			File: req.Character.genFile(req.Character.Files[0]),
+		},
 	}
+
+	// fcl.SetText(req.Character.genChat(msg))
+	// for _, v := range req.Character.Files {
+	// 	fcl.SetFile(req.Character.genFile(v))
+	// }
 
 	input.Messages = append(input.Messages, dashscopego.FileMessage{
 		Role:    "user",
