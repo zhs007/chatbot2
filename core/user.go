@@ -1,10 +1,6 @@
 package core
 
 import (
-	"log/slog"
-
-	"github.com/devinyf/dashscopego"
-	"github.com/devinyf/dashscopego/qwen"
 	"github.com/zhs007/goutils"
 )
 
@@ -14,31 +10,35 @@ type Message struct {
 }
 
 type User struct {
-	UserID        string                 `yaml:"userID" json:"userID"`               // userID
-	History       []*Message             `yaml:"history" json:"history"`             // history
-	CharacterName string                 `yaml:"characterName" json:"characterName"` // characterName
-	input         *dashscopego.TextInput `yaml:"-" json:"-"`                         // -
-	character     *Character             `yaml:"-" json:"-"`                         // -
+	UserID        string     `yaml:"userID" json:"userID"`               // userID
+	History       []*Message `yaml:"history" json:"history"`             // history
+	CharacterName string     `yaml:"characterName" json:"characterName"` // characterName
+	req           IRequest   `yaml:"-" json:"-"`                         // -
+	character     *Character `yaml:"-" json:"-"`                         // -
 }
 
-func (user *User) ProcChat(chatbot *Chatbot, msg string, onChatbot FuncOnChatbot) (string, string, error) {
+func (user *User) ProcChat(chatbot *Chatbot, msg string, onChatbot FuncOnChatbot) (*Message, error) {
 	if user.character.IsWorkflow() {
 		return user.character.ProcWorkflow(chatbot, msg, onChatbot)
 	}
 
-	user.AddChat(msg)
+	retmsg, err := user.req.Start(chatbot, msg)
 
-	role, msg, err := chatbot.SendChat(user)
+	// user.AddChat(msg)
+
+	// role, msg, err := chatbot.SendChat(user)
 	if err != nil {
-		goutils.Error("User.ProcChat:SendChat",
+		goutils.Error("User.ProcChat:Start",
 			goutils.Err(err))
 
-		return "", "", err
+		return nil, err
 	}
 
-	onChatbot(role, msg)
+	onChatbot(retmsg)
 
-	return role, msg, err
+	user.req.Push(retmsg)
+
+	return retmsg, err
 }
 
 func (user *User) SetCharacter(character *Character) {
@@ -54,9 +54,11 @@ func (user *User) SetCharacter(character *Character) {
 }
 
 func (user *User) rebuild(character *Character) {
+	user.req = character.NewRequest()
+
 	// user.character = character
 	// if character != nil {
-	user.input = character.GenInput()
+	// user.input = character.GenInput()
 	// } else {
 	// 	user.input = &dashscopego.TextInput{
 	// 		Messages: []dashscopego.TextMessage{
@@ -68,36 +70,37 @@ func (user *User) rebuild(character *Character) {
 	// }
 
 	for _, v := range user.History {
-		user.input.Messages = append(user.input.Messages, dashscopego.TextMessage{
-			Role:    v.Role,
-			Content: &qwen.TextContent{Text: v.Message},
-		})
+		user.req.Push(v)
+		// 	user.input.Messages = append(user.input.Messages, dashscopego.TextMessage{
+		// 		Role:    v.Role,
+		// 		Content: &qwen.TextContent{Text: v.Message},
+		// 	})
 	}
 
-	goutils.Debug("User.rebuild",
-		slog.String("character", character.Name))
+	// goutils.Debug("User.rebuild",
+	// 	slog.String("character", character.Name))
 }
 
-func (user *User) AddChat(msg string) {
-	user.input.Messages = append(user.input.Messages, user.character.GenChatMessage(msg))
+// func (user *User) AddChat(msg string) {
+// 	user.input.Messages = append(user.input.Messages, user.character.GenChatMessage(msg))
 
-	user.History = append(user.History, &Message{
-		Role:    "user",
-		Message: msg,
-	})
-}
+// 	user.History = append(user.History, &Message{
+// 		Role:    "user",
+// 		Message: msg,
+// 	})
+// }
 
-func (user *User) AddReply(role string, msg string) {
-	user.input.Messages = append(user.input.Messages, dashscopego.TextMessage{
-		Role:    role,
-		Content: &qwen.TextContent{Text: msg},
-	})
+// func (user *User) AddReply(role string, msg string) {
+// 	user.input.Messages = append(user.input.Messages, dashscopego.TextMessage{
+// 		Role:    role,
+// 		Content: &qwen.TextContent{Text: msg},
+// 	})
 
-	user.History = append(user.History, &Message{
-		Role:    role,
-		Message: msg,
-	})
-}
+// 	user.History = append(user.History, &Message{
+// 		Role:    role,
+// 		Message: msg,
+// 	})
+// }
 
 func (user *User) Rebuild(mgrCharacters *CharacterMgr) {
 	if user.CharacterName == "" {

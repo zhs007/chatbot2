@@ -50,8 +50,8 @@ func (serv *Serv) Start() error {
 			} else {
 				// user.AddChat(txt)
 
-				role, msg, err := user.ProcChat(serv.chatbot, txt, func(role string, ret string) {
-					msgRet := tgbotapi.NewMessage(update.Message.Chat.ID, ret)
+				_, err := user.ProcChat(serv.chatbot, txt, func(ret *core.Message) {
+					msgRet := tgbotapi.NewMessage(update.Message.Chat.ID, ret.Message)
 					msgRet.ReplyToMessageID = update.Message.MessageID
 
 					serv.bot.Send(msgRet)
@@ -63,7 +63,9 @@ func (serv *Serv) Start() error {
 					return err
 				}
 
-				user.AddReply(role, msg)
+				// user
+
+				// user.AddReply(role, msg)
 
 				// msgRet := tgbotapi.NewMessage(update.Message.Chat.ID, msg)
 				// msgRet.ReplyToMessageID = update.Message.MessageID

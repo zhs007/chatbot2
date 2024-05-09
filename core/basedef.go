@@ -1,3 +1,3 @@
 package core
 
-type FuncOnChatbot func(string, string)
+type FuncOnChatbot func(*Message)
