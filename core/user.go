@@ -21,6 +21,26 @@ type User struct {
 	character     *Character             `yaml:"-" json:"-"`                         // -
 }
 
+func (user *User) ProcChat(chatbot *Chatbot, msg string, onChatbot FuncOnChatbot) (string, string, error) {
+	if user.character.IsWorkflow() {
+		return user.character.ProcWorkflow(chatbot, msg, onChatbot)
+	}
+
+	user.AddChat(msg)
+
+	role, msg, err := chatbot.SendChat(user)
+	if err != nil {
+		goutils.Error("User.ProcChat:SendChat",
+			goutils.Err(err))
+
+		return "", "", err
+	}
+
+	onChatbot(role, msg)
+
+	return role, msg, err
+}
+
 func (user *User) SetCharacter(character *Character) {
 	if user.CharacterName != character.Name {
 		user.History = nil

@@ -48,11 +48,16 @@ func (serv *Serv) Start() error {
 
 				serv.bot.Send(msg)
 			} else {
-				user.AddChat(txt)
+				// user.AddChat(txt)
 
-				role, msg, err := serv.chatbot.SendChat(user)
+				role, msg, err := user.ProcChat(serv.chatbot, txt, func(role string, ret string) {
+					msgRet := tgbotapi.NewMessage(update.Message.Chat.ID, ret)
+					msgRet.ReplyToMessageID = update.Message.MessageID
+
+					serv.bot.Send(msgRet)
+				})
 				if err != nil {
-					goutils.Error("Serv.Start:SendChat",
+					goutils.Error("Serv.Start:ProcChat",
 						goutils.Err(err))
 
 					return err
@@ -60,10 +65,10 @@ func (serv *Serv) Start() error {
 
 				user.AddReply(role, msg)
 
-				msgRet := tgbotapi.NewMessage(update.Message.Chat.ID, msg)
-				msgRet.ReplyToMessageID = update.Message.MessageID
+				// msgRet := tgbotapi.NewMessage(update.Message.Chat.ID, msg)
+				// msgRet.ReplyToMessageID = update.Message.MessageID
 
-				serv.bot.Send(msgRet)
+				// serv.bot.Send(msgRet)
 			}
 
 			// input := dashscopego.TextInput{

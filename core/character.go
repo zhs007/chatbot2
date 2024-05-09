@@ -2,15 +2,47 @@ package core
 
 import (
 	"fmt"
+	"log/slog"
 
 	"github.com/zhs007/dashscopego"
 	"github.com/zhs007/dashscopego/qwen"
+	"github.com/zhs007/goutils"
 )
 
 type Character struct {
-	Name   string   `yaml:"-" json:"-"`           // name
-	Prompt string   `yaml:"prompt" json:"prompt"` // prompt
-	Files  []string `yaml:"files" json:"files"`   // files
+	Name     string   `yaml:"-" json:"-"`               // name
+	Prompt   string   `yaml:"prompt" json:"prompt"`     // prompt
+	Files    []string `yaml:"files" json:"files"`       // files
+	Workflow []string `yaml:"workflow" json:"workflow"` // workflow
+}
+
+func (character *Character) IsWorkflow() bool {
+	return len(character.Workflow) > 0
+}
+
+func (character *Character) ProcWorkflow(chatbot *Chatbot, msg string, onChatbot FuncOnChatbot) (string, string, error) {
+	for _, v := range character.Workflow {
+		c := chatbot.MgrCharacters.Get(v)
+		if c != nil {
+			input := c.GenInput()
+			input.Messages = append(input.Messages, c.GenChatMessage(msg))
+
+			role, ret, err := chatbot.sendChat(input)
+			if err != nil {
+				goutils.Error("Character.ProcWorkflow:sendChat",
+					slog.String("character", v),
+					goutils.Err(err))
+
+				return "", "", err
+			}
+
+			onChatbot(role, ret)
+
+			msg = ret
+		}
+	}
+
+	return "assistant", msg, nil
 }
 
 func (character *Character) GenInput() *dashscopego.TextInput {

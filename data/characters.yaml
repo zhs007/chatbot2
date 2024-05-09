@@ -7,4 +7,8 @@ characters:
     prompt: 你是一个翻译大师，精通中文和英文，帮我把我说的话翻译成英文。
   en2cn:
     prompt: 你是一个翻译大师，精通中文和英文，帮我把我说的话翻译成中文。
-default: cn2en
+  cn2enex:
+    workflow:
+      - cn2en
+      - en2cn
+default: cn2enex

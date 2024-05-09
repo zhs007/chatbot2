@@ -16,22 +16,41 @@ type Chatbot struct {
 	MgrUsers      *UserMgr
 }
 
-func (bot *Chatbot) SendChat(user *User) (string, string, error) {
+func (bot *Chatbot) sendChat(input *dashscopego.TextInput) (string, string, error) {
 	req := &dashscopego.TextRequest{
-		Input:  *user.input,
+		Input:  *input,
 		Plugin: `{"pdf_extracter":{}}`,
 	}
 
 	ctx := context.TODO()
 	resp, err := bot.qwenClient.CreateCompletion(ctx, req)
 	if err != nil {
-		goutils.Error("Chatbot.SendChat:CreateCompletion",
+		goutils.Error("Chatbot.sendChat:CreateCompletion",
 			goutils.Err(err))
 
 		return "", "", err
 	}
 
 	return resp.Output.Choices[0].Message.Role, resp.Output.Choices[0].Message.Content.ToString(), nil
+}
+
+func (bot *Chatbot) SendChat(user *User) (string, string, error) {
+	return bot.sendChat(user.input)
+	// req := &dashscopego.TextRequest{
+	// 	Input:  *user.input,
+	// 	Plugin: `{"pdf_extracter":{}}`,
+	// }
+
+	// ctx := context.TODO()
+	// resp, err := bot.qwenClient.CreateCompletion(ctx, req)
+	// if err != nil {
+	// 	goutils.Error("Chatbot.SendChat:CreateCompletion",
+	// 		goutils.Err(err))
+
+	// 	return "", "", err
+	// }
+
+	// return resp.Output.Choices[0].Message.Role, resp.Output.Choices[0].Message.Content.ToString(), nil
 }
 
 func NewChatbot(apiKey string, cfgPath string) (*Chatbot, error) {
