@@ -11,13 +11,14 @@ type UserMgr struct {
 	MapUsers map[string]*User `yaml:"users" json:"users"` // users
 }
 
-func (mgr *UserMgr) GetUser(uid string) *User {
+func (mgr *UserMgr) GetUser(uid string, mgrCharacters *CharacterMgr) *User {
 	u, isok := mgr.MapUsers[uid]
 	if isok {
 		return u
 	}
 
 	nu := NewUser(uid)
+	nu.Rebuild(mgrCharacters)
 
 	mgr.MapUsers[uid] = nu
 

@@ -26,7 +26,7 @@ func (serv *Serv) Start() error {
 			goutils.Info(fmt.Sprintf("[%s] %s", update.Message.From.UserName, update.Message.Text))
 
 			uid := strings.TrimSpace(update.Message.From.UserName)
-			user := serv.chatbot.MgrUsers.GetUser(uid)
+			user := serv.chatbot.MgrUsers.GetUser(uid, serv.chatbot.MgrCharacters)
 			if user == nil {
 				goutils.Error("Serv.Start:GetUser",
 					slog.String("uid", uid),
