@@ -49,7 +49,8 @@ func (req *FileRequest) Start(chatbot *Chatbot, msg string) (*Message, error) {
 	})
 
 	treq := &dashscopego.FileRequest{
-		Input: *input,
+		Input:   *input,
+		Plugins: *req.Character.GenPlugins(),
 	}
 
 	resp, err := chatbot.qwenClient.CreateFileCompletion(context.TODO(), treq)

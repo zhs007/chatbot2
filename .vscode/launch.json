@@ -10,6 +10,17 @@
             "request": "launch",
             "mode": "auto",
             "program": "./app/telegrambot"
+        },
+        {
+            "name": "qwen2",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "./app/qwen2",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "DASHSCOPE_API_KEY": "sk-478fb42a68744c41a5d8a1a59667e981",
+            }
         }
     ]
 }
