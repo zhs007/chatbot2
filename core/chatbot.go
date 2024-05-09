@@ -5,8 +5,8 @@ import (
 	"log/slog"
 	"path"
 
-	"github.com/zhs007/dashscopego"
-	"github.com/zhs007/dashscopego/qwen"
+	"github.com/devinyf/dashscopego"
+	"github.com/devinyf/dashscopego/qwen"
 	"github.com/zhs007/goutils"
 )
 
@@ -16,11 +16,11 @@ type Chatbot struct {
 	MgrUsers      *UserMgr
 }
 
-func (bot *Chatbot) sendChat(input *dashscopego.TextInput) (string, string, error) {
-	req := &dashscopego.TextRequest{
-		Input:  *input,
-		Plugin: `{"pdf_extracter":{}}`,
-	}
+func (bot *Chatbot) sendChat(req *dashscopego.TextRequest) (string, string, error) {
+	// req := &dashscopego.TextRequest{
+	// 	Input: *input,
+	// 	// Plugin: `{"pdf_extracter":{}}`,
+	// }
 
 	ctx := context.TODO()
 	resp, err := bot.qwenClient.CreateCompletion(ctx, req)
@@ -35,7 +35,7 @@ func (bot *Chatbot) sendChat(input *dashscopego.TextInput) (string, string, erro
 }
 
 func (bot *Chatbot) SendChat(user *User) (string, string, error) {
-	return bot.sendChat(user.input)
+	return bot.sendChat(user.character.GenRequest(user.input))
 	// req := &dashscopego.TextRequest{
 	// 	Input:  *user.input,
 	// 	Plugin: `{"pdf_extracter":{}}`,

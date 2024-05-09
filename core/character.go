@@ -3,9 +3,11 @@ package core
 import (
 	"fmt"
 	"log/slog"
+	"os"
+	"path"
 
-	"github.com/zhs007/dashscopego"
-	"github.com/zhs007/dashscopego/qwen"
+	"github.com/devinyf/dashscopego"
+	"github.com/devinyf/dashscopego/qwen"
 	"github.com/zhs007/goutils"
 )
 
@@ -15,6 +17,28 @@ type Character struct {
 	Type     string   `yaml:"type" json:"type"`         // type
 	Files    []string `yaml:"files" json:"files"`       // files
 	Workflow []string `yaml:"workflow" json:"workflow"` // workflow
+}
+
+func (character *Character) GenRequest(input *dashscopego.TextInput) *dashscopego.TextRequest {
+	plugins := character.GenPlugins()
+	if plugins == nil {
+		return &dashscopego.TextRequest{
+			Input: *input,
+		}
+	}
+
+	return &dashscopego.TextRequest{
+		Input:   *input,
+		Plugins: *plugins,
+	}
+}
+
+func (character *Character) GenPlugins() *qwen.Plugins {
+	if len(character.Files) > 0 {
+		return &qwen.Plugins{qwen.PluginPDFExtracter: {}}
+	}
+
+	return nil
 }
 
 func (character *Character) IsWorkflow() bool {
@@ -28,7 +52,7 @@ func (character *Character) ProcWorkflow(chatbot *Chatbot, msg string, onChatbot
 			input := c.GenInput()
 			input.Messages = append(input.Messages, c.GenChatMessage(msg))
 
-			role, ret, err := chatbot.sendChat(input)
+			role, ret, err := chatbot.sendChat(c.GenRequest(input))
 			if err != nil {
 				goutils.Error("Character.ProcWorkflow:sendChat",
 					slog.String("character", v),
@@ -64,6 +88,11 @@ func (character *Character) genChat(msg string) string {
 	return msg
 }
 
+func (character *Character) genFile(fn string) string {
+	curdir, _ := os.Getwd()
+	return fmt.Sprintf("file://%v", path.Join(curdir, fn))
+}
+
 func (character *Character) GenChatMessage(msg string) dashscopego.TextMessage {
 	if len(character.Files) == 0 {
 		return dashscopego.TextMessage{
@@ -76,14 +105,14 @@ func (character *Character) GenChatMessage(msg string) dashscopego.TextMessage {
 
 	str := ""
 	for _, v := range character.Files {
-		str += fmt.Sprintf(`,{"file": "%v"}`, v)
+		str += fmt.Sprintf(`,{"file": "%v"}`, character.genFile(v))
 	}
 
 	txtmsg := dashscopego.TextMessage{
 		Role: "user",
 		Content: &qwen.TextContent{
-			Text:  fmt.Sprintf(`[{"text": "%v"}%v]`, character.genChat(msg), str),
-			IsRaw: false,
+			Text: fmt.Sprintf(`[{"text": "%v"}%v]`, character.genChat(msg), str),
+			// IsRaw: false,
 		},
 	}
 

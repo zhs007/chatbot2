@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/zhs007/dashscopego"
-	"github.com/zhs007/dashscopego/qwen"
+	"github.com/devinyf/dashscopego"
+	"github.com/devinyf/dashscopego/qwen"
 )
 
 func main() {
