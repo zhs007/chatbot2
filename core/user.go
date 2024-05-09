@@ -25,22 +25,23 @@ func (user *User) SetCharacter(character *Character) {
 		user.CharacterName = character.Name
 	}
 
+	user.CharacterName = character.Name
 	user.character = character
 	user.rebuild(character)
 }
 
 func (user *User) rebuild(character *Character) {
-	if character != nil {
-		user.input = character.GenInput()
-	} else {
-		user.input = &dashscopego.TextInput{
-			Messages: []dashscopego.TextMessage{
-				{Role: "system", Content: &qwen.TextContent{
-					Text: "你是Zerro的AI机器人。",
-				}},
-			},
-		}
-	}
+	// if character != nil {
+	user.input = character.GenInput()
+	// } else {
+	// 	user.input = &dashscopego.TextInput{
+	// 		Messages: []dashscopego.TextMessage{
+	// 			{Role: "system", Content: &qwen.TextContent{
+	// 				Text: "你是Zerro的AI机器人。",
+	// 			}},
+	// 		},
+	// 	}
+	// }
 
 	for _, v := range user.History {
 		user.input.Messages = append(user.input.Messages, dashscopego.TextMessage{

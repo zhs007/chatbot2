@@ -35,6 +35,9 @@ func (serv *Serv) Start() error {
 				return core.ErrGetUser
 			}
 
+			goutils.Info("user character",
+				slog.String("character", user.CharacterName))
+
 			txt := strings.TrimSpace(update.Message.Text)
 			character := serv.chatbot.MgrCharacters.Get(txt)
 			if character != nil {
