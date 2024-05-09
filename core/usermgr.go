@@ -1,6 +1,7 @@
 package core
 
 import (
+	"log/slog"
 	"os"
 
 	"github.com/zhs007/goutils"
@@ -16,6 +17,9 @@ func (mgr *UserMgr) GetUser(uid string, mgrCharacters *CharacterMgr) *User {
 	if isok {
 		return u
 	}
+
+	goutils.Debug("UserMgr.GetUser:NewUser",
+		slog.String("uid", uid))
 
 	nu := NewUser(uid)
 	nu.Rebuild(mgrCharacters)

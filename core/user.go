@@ -1,8 +1,11 @@
 package core
 
 import (
+	"log/slog"
+
 	"github.com/zhs007/dashscopego"
 	"github.com/zhs007/dashscopego/qwen"
+	"github.com/zhs007/goutils"
 )
 
 type Message struct {
@@ -31,6 +34,7 @@ func (user *User) SetCharacter(character *Character) {
 }
 
 func (user *User) rebuild(character *Character) {
+	// user.character = character
 	// if character != nil {
 	user.input = character.GenInput()
 	// } else {
@@ -49,6 +53,9 @@ func (user *User) rebuild(character *Character) {
 			Content: &qwen.TextContent{Text: v.Message},
 		})
 	}
+
+	goutils.Debug("User.rebuild",
+		slog.String("character", character.Name))
 }
 
 func (user *User) AddChat(msg string) {
@@ -74,16 +81,16 @@ func (user *User) AddReply(role string, msg string) {
 
 func (user *User) Rebuild(mgrCharacters *CharacterMgr) {
 	if user.CharacterName == "" {
-		user.rebuild(mgrCharacters.GetDefault())
+		user.SetCharacter(mgrCharacters.GetDefault())
 
 		return
 	}
 
 	character := mgrCharacters.Get(user.CharacterName)
 	if character != nil {
-		user.rebuild(character)
+		user.SetCharacter(character)
 	} else {
-		user.rebuild(mgrCharacters.GetDefault())
+		user.SetCharacter(mgrCharacters.GetDefault())
 	}
 }
 
