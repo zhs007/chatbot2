@@ -12,6 +12,7 @@ import (
 type Character struct {
 	Name     string   `yaml:"-" json:"-"`               // name
 	Prompt   string   `yaml:"prompt" json:"prompt"`     // prompt
+	Type     string   `yaml:"type" json:"type"`         // type
 	Files    []string `yaml:"files" json:"files"`       // files
 	Workflow []string `yaml:"workflow" json:"workflow"` // workflow
 }
@@ -55,12 +56,20 @@ func (character *Character) GenInput() *dashscopego.TextInput {
 	}
 }
 
+func (character *Character) genChat(msg string) string {
+	if character.Type == "simple" {
+		return fmt.Sprintf("%v\n\n%v", character.Prompt, msg)
+	}
+
+	return msg
+}
+
 func (character *Character) GenChatMessage(msg string) dashscopego.TextMessage {
 	if len(character.Files) == 0 {
 		return dashscopego.TextMessage{
 			Role: "user",
 			Content: &qwen.TextContent{
-				Text: msg,
+				Text: character.genChat(msg),
 			},
 		}
 	}
@@ -73,7 +82,7 @@ func (character *Character) GenChatMessage(msg string) dashscopego.TextMessage {
 	txtmsg := dashscopego.TextMessage{
 		Role: "user",
 		Content: &qwen.TextContent{
-			Text:  fmt.Sprintf(`[{"text": "%v"}%v]`, msg, str),
+			Text:  fmt.Sprintf(`[{"text": "%v"}%v]`, character.genChat(msg), str),
 			IsRaw: false,
 		},
 	}

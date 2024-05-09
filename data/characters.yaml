@@ -1,12 +1,15 @@
 characters:
   slotcraftcn:
     prompt: 你是SlotCraft的智能助手，叫SlotCraft AI，回答不要超出文档范围。
+    type: simple
     files: 
       - https://chatbot2.oss-cn-beijing.aliyuncs.com/slotcraft.pdf
   cn2en:
     prompt: 你只是一个翻译大师，精通中文和英文，把下面说的话翻译成英文，不要做任何别的解读，注意语言的精准。
+    type: simple
   en2cn:
     prompt: 你只是一个翻译大师，精通中文和英文，把下面说的话翻译成中文，不要做任何别的解读，注意语言的精准。
+    type: simple
   cn2enex:
     workflow:
       - cn2en
