@@ -14,4 +14,8 @@ characters:
     workflow:
       - cn2en
       - en2cn
+  slotcraft:
+    workflow:
+      - slotcraftcn
+      - cn2en
 default: cn2enex
