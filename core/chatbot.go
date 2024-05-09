@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"log/slog"
 	"path"
 
 	"github.com/zhs007/dashscopego"
@@ -54,6 +55,9 @@ func NewChatbot(apiKey string, cfgPath string) (*Chatbot, error) {
 	}
 
 	mgrUser.Rebuild(mgrCharacter)
+
+	goutils.Info("NewChatbot",
+		slog.Any("mgrCharacter", mgrCharacter))
 
 	return &Chatbot{
 		qwenClient:    cli,
