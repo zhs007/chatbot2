@@ -73,7 +73,11 @@ func (user *User) AddReply(role string, msg string) {
 
 func (user *User) Rebuild(mgrCharacters *CharacterMgr) {
 	character := mgrCharacters.Get(user.CharacterName)
-	user.rebuild(character)
+	if character != nil {
+		user.rebuild(character)
+	} else {
+		user.rebuild(mgrCharacters.GetDefault())
+	}
 }
 
 func NewUser(uid string) *User {

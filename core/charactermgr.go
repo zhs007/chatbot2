@@ -8,7 +8,8 @@ import (
 )
 
 type CharacterMgr struct {
-	MapCharacters map[string]*Character `yaml:"characters" json:"characters"` // characters
+	MapCharacters    map[string]*Character `yaml:"characters" json:"characters"` // characters
+	DefaultCharacter string                `yaml:"default" json:"default"`       // default
 }
 
 func (mgr *CharacterMgr) Get(character string) *Character {
@@ -18,6 +19,10 @@ func (mgr *CharacterMgr) Get(character string) *Character {
 	}
 
 	return nil
+}
+
+func (mgr *CharacterMgr) GetDefault() *Character {
+	return mgr.MapCharacters[mgr.DefaultCharacter]
 }
 
 func LoadCharacterMgr(fn string) (*CharacterMgr, error) {

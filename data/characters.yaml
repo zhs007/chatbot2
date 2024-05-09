@@ -3,3 +3,8 @@ characters:
     prompt: 你是SlotCraft的智能助手，叫SlotCraft AI，回答不要超出文档范围。
     files: 
       - https://chatbot2.oss-cn-beijing.aliyuncs.com/slotcraft.pdf
+  cn2en:
+    prompt: 你是一个翻译大师，精通中文和英文，帮我把我说的话翻译成英文。
+  en2cn:
+    prompt: 你是一个翻译大师，精通中文和英文，帮我把我说的话翻译成中文。
+default: cn2en
