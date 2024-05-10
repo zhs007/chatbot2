@@ -160,8 +160,8 @@ github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 github.com/yuin/gopher-lua v0.0.0-20220504180219-658193537a64 h1:5mLPGnFdSsevFRFc9q3yYbBkB6tsm4aCwwQV/j1JQAQ=
 github.com/yuin/gopher-lua v0.0.0-20220504180219-658193537a64/go.mod h1:GBR0iDaNXjAgGg9zfCvksxSRnQx76gclCIb7kdAd1Pw=
-github.com/zhs007/dashscopego v0.0.8 h1:3P4P9X8+7qVD3qgzpF019gPPqU+PZ84L0BYn7X8Qw74=
-github.com/zhs007/dashscopego v0.0.8/go.mod h1:B1EiGzocOyLhaluNqGKLxTc+Vv2ht5JWrSNH0/gYddc=
+github.com/zhs007/dashscopego v0.0.9 h1:eioOLik1rJwM79Bn8ZRCkea3ibRQiWEZ8Ly/cgTH3CY=
+github.com/zhs007/dashscopego v0.0.9/go.mod h1:B1EiGzocOyLhaluNqGKLxTc+Vv2ht5JWrSNH0/gYddc=
 github.com/zhs007/goutils v0.2.2 h1:jxLCx9SWC3zOhijqxc0dpUM8+BZswVg9wyLV2oRxRgE=
 github.com/zhs007/goutils v0.2.2/go.mod h1:B/TSiIbceQ5oeLxOmP/sRYpaYYJND8HzbubJLLrDwwU=
 go.uber.org/mock v0.4.0 h1:VcM4ZOtdbR4f6VXfiOpwpVJDL6lCReaZ6mw31wqh7KU=

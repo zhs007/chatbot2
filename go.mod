@@ -8,7 +8,7 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/silenceper/wechat/v2 v2.1.6
-	github.com/zhs007/dashscopego v0.0.8
+	github.com/zhs007/dashscopego v0.0.9
 	github.com/zhs007/goutils v0.2.2
 	gopkg.in/yaml.v3 v3.0.1
 )
