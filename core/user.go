@@ -22,6 +22,11 @@ func (user *User) ProcChat(chatbot *Chatbot, msg string, onChatbot FuncOnChatbot
 		return user.character.ProcWorkflow(chatbot, msg, onChatbot)
 	}
 
+	user.req.Push(&Message{
+		Role:    "user",
+		Message: msg,
+	})
+
 	retmsg, err := user.req.Start(chatbot, msg)
 
 	// user.AddChat(msg)

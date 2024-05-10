@@ -32,7 +32,8 @@ func (serv *Serv) Start() error {
 					slog.String("uid", uid),
 					goutils.Err(core.ErrGetUser))
 
-				return core.ErrGetUser
+				continue
+				// return core.ErrGetUser
 			}
 
 			goutils.Info("user character",
@@ -60,7 +61,8 @@ func (serv *Serv) Start() error {
 					goutils.Error("Serv.Start:ProcChat",
 						goutils.Err(err))
 
-					return err
+					continue
+					// return err
 				}
 
 				// user
