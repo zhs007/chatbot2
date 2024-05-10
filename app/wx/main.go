@@ -5,14 +5,14 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/devinyf/dashscopego"
-	"github.com/devinyf/dashscopego/qwen"
 	"github.com/gin-gonic/gin"
 	"github.com/silenceper/wechat/v2"
 	"github.com/silenceper/wechat/v2/cache"
 	"github.com/silenceper/wechat/v2/officialaccount"
 	offConfig "github.com/silenceper/wechat/v2/officialaccount/config"
 	"github.com/silenceper/wechat/v2/officialaccount/message"
+	"github.com/zhs007/dashscopego"
+	"github.com/zhs007/dashscopego/qwen"
 	"github.com/zhs007/goutils"
 )
 

@@ -4,8 +4,8 @@ import (
 	"log/slog"
 	"path"
 
-	"github.com/devinyf/dashscopego"
-	"github.com/devinyf/dashscopego/qwen"
+	"github.com/zhs007/dashscopego"
+	"github.com/zhs007/dashscopego/qwen"
 	"github.com/zhs007/goutils"
 )
 

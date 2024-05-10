@@ -6,7 +6,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/devinyf/dashscopego/qwen"
+	"github.com/zhs007/dashscopego/qwen"
 	"github.com/zhs007/goutils"
 )
 
